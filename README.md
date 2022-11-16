@@ -1,3 +1,16 @@
+# SDL for libxenon (xbox 360 sdk)
+
+you need libxenon installed and the enviroment variable `DEVKITXENON` set to the directory that libxenon is installed in.
+
+to build and install, run:
+```sh
+make -f Makefile.xenon install
+```
+
+---
+
+## original readme
+
 
                          Simple DirectMedia Layer
 
@@ -46,4 +59,3 @@ issues, you can join the developers mailing list:
 
 Enjoy!
 	Sam Lantinga				(slouken@libsdl.org)
-

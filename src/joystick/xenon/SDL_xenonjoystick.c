@@ -3,7 +3,7 @@
 
 #include <math.h>
 #include <stdio.h>		/* For the definition of NULL */
- 
+
 #include "SDL_error.h"
 #include "SDL_joystick.h"
 #include "SDL_sysjoystick.h"
@@ -21,8 +21,8 @@ char joyName[50];
 
 /* The private structure used to keep track of a joystick */
 struct joystick_hwdata
-{ 
-        struct controller_data_s curpad;      
+{
+        struct controller_data_s curpad;
 
 };
 
@@ -35,23 +35,23 @@ int SDL_SYS_JoystickInit(void)
 /* Function to get the device-dependent name of a joystick */
 const char *SDL_SYS_JoystickName(int index)
 {
-	
+
 	sprintf(joyName,"XENON Gamepad %ld",index);
 	return(joyName);
 }
 
 int SDL_SYS_JoystickOpen(SDL_Joystick *joystick)
 {
-	
+
          /* allocate memory for system specific hardware data */
         joystick->hwdata = (struct joystick_hwdata *) SDL_malloc(sizeof(*joystick->hwdata));
-        
+
         if (joystick->hwdata == NULL)
         {
                 SDL_OutOfMemory();
                 return(-1);
         }
-        
+
         SDL_memset(joystick->hwdata, 0, sizeof(*joystick->hwdata));
 
         /* fill nbuttons, naxes, and nhats fields */
@@ -63,22 +63,22 @@ int SDL_SYS_JoystickOpen(SDL_Joystick *joystick)
 }
 
 void SDL_SYS_JoystickUpdate(SDL_Joystick *joystick)
-{        
+{
         static int prev_buttons[4] = {0};
         static Sint16 nX = 0, nY = 0;
         static Sint16 nXR = 0, nYR = 0;
-        unsigned long b=0; 
+        unsigned long b=0;
         int hat=0, changed=0;
 
         /* Theres a bug with the current libXenon controller implementation
            that sometimes causes analog values to 'stick' and retain the same x/y values
            after release back to origin.
            */
-        
+
         usb_do_poll();
-        
+
         get_controller_data(&joystick->hwdata->curpad, joystick->index);
-    
+
         if (joystick->hwdata->curpad.a)
         {
                 if (!joystick->buttons[0])
@@ -178,7 +178,7 @@ void SDL_SYS_JoystickUpdate(SDL_Joystick *joystick)
                         SDL_PrivateJoystickButton(joystick, (Uint8)8, SDL_RELEASED);
         }
 
-        if (joystick->hwdata->curpad.select)
+        if (joystick->hwdata->curpad.back)
         {
                 if (!joystick->buttons[9])
                         SDL_PrivateJoystickButton(joystick, (Uint8)9, SDL_PRESSED);
@@ -215,7 +215,7 @@ void SDL_SYS_JoystickUpdate(SDL_Joystick *joystick)
         // do the HATS baby
 
         hat = SDL_HAT_CENTERED;
-        
+
         if (joystick->hwdata->curpad.down)
                 hat|=SDL_HAT_DOWN;
         if (joystick->hwdata->curpad.up)
@@ -291,8 +291,8 @@ void SDL_SYS_JoystickUpdate(SDL_Joystick *joystick)
                 nYR = 0;
 
         if ( nYR != joystick->axes[3] )
-                SDL_PrivateJoystickAxis(joystick, (Uint8)3, (Sint16)nYR);    
-        
+                SDL_PrivateJoystickAxis(joystick, (Uint8)3, (Sint16)nYR);
+
 }
 
 void SDL_SYS_JoystickClose(SDL_Joystick *joystick)
@@ -302,12 +302,12 @@ void SDL_SYS_JoystickClose(SDL_Joystick *joystick)
                 SDL_free(joystick->hwdata);
                 joystick->hwdata = NULL;
          }
-         
+
          return;
 }
 
 void SDL_SYS_JoystickQuit(void)
 {
 
-    
+
 }
